@@ -1,0 +1,7 @@
+owner: vinhpham-techlab
+git-repo: helm-charts
+charts_repo_url: https://vinhpham-techlab.github.io/helm-charts
+index-path: ./index.yaml
+generate-release-notes: true
+packages_with_index: true
+release-name-template: "{{ .Name }}-{{ .Version }}"

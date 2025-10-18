@@ -1,0 +1,33 @@
+suite: test vault auth
+templates:
+  - templates/vault-auth.yaml
+tests:
+  - it: should not contain document when secret is empty
+    release:
+      name: my-release
+      namespace: default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should contain document
+    release:
+      name: my-release
+      namespace: default
+    set:
+      secrets:
+        - name: airflow-connections
+          path: production/airflow/banhmi/airflow-connections
+          destination: airflow-connections
+          refreshAfter: 30s
+      auth:
+        mount: KUSTOM-MOUNT
+        role: KUSTOM
+    documentIndex: 0
+    asserts:
+      - equal:
+          path: spec.mount
+          value: KUSTOM-MOUNT
+
+      - equal:
+          path: spec.kubernetes.role
+          value: KUSTOM

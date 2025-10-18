@@ -1,0 +1,16 @@
+{{- if gt (len .Values.secrets) 0 -}}
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultAuth
+metadata:
+  name: vault-static-auth
+  labels:
+    {{- include "vault-secret.labels" . | nindent 4 }}
+spec:
+  method: kubernetes
+  mount: {{ .Values.auth.mount }}
+  kubernetes:
+    role: {{ .Values.auth.role }}
+    serviceAccount: {{ include "vault-secret.serviceAccountName" . }}
+    audiences:
+      - vault
+{{- end -}}

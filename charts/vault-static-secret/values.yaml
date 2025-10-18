@@ -1,0 +1,55 @@
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: false
+  # -- Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # -- If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+auth:
+  # -- vault mount
+  mount: kubernetes
+  # -- name of role
+  role: vault-role
+
+# -- (list) secrets will be synced
+# @raw
+#
+# Example value
+#
+# ```yaml
+# #ref: https://developer.hashicorp.com/vault/docs/platform/k8s/vso/api-reference#vaultstaticsecretspec
+# - name: airflow-connections
+#   path: production/airflow/banhmi/airflow-connections
+#   destination: airflow-connections
+#     labels:
+#       app: airflow
+#     transformation:
+#       excludeRaw: true
+#       excludes:
+#         - redpanda-password
+#       includes:
+#         - superusers.txt
+#   refreshAfter: 30s
+# ```
+#
+secrets:
+  []
+  # - name: airflow-connections
+  #   path: production/airflow/banhmi/airflow-connections
+  #   destination: airflow-connections
+  #     labels:
+  #       app: airflow
+  #     transformation:
+  #       excludeRaw: true
+  #       excludes:
+  #         - redpanda-password
+  #       includes:
+  #         - superusers.txt
+  #   refreshAfter: 30s

@@ -1,0 +1,11 @@
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  annotations:
+    something: anything
+secrets:
+  - name: airflow-connections
+    path: production/airflow/banhmi/airflow-connections
+    destination: airflow-connections
+    refreshAfter: 30
