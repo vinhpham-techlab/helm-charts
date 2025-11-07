@@ -1,0 +1,21 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: strimzi-kafka-connect-namespaced
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: strimzi-kafka-connect-namespaced-binding
+subjects:
+- kind: ServiceAccount
+  name: {{ .Values.kafkaConnect.name }}-connect
+roleRef:
+  kind: Role
+  name: strimzi-kafka-connect-namespaced
+  apiGroup: rbac.authorization.k8s.io

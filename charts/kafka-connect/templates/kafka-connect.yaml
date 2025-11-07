@@ -1,0 +1,60 @@
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnect
+metadata:
+  name: {{ .Values.kafkaConnect.name }}
+  annotations:
+    strimzi.io/use-connector-resources: "true"
+spec:
+  image: {{ .Values.kafkaConnect.image }}
+  replicas: {{ .Values.kafkaConnect.replicas }}
+  bootstrapServers: {{ join "," .Values.kafka.brokers }}
+  
+  {{- if .Values.kafka.tls.enabled }}
+  tls:
+    trustedCertificates:
+    - certificate: ca.crt
+      secretName: {{ .Values.kafka.tls.secretName }}
+  {{- end }}
+
+  {{ if .Values.kafka.sasl.enabled }}
+  authentication:
+    type: {{ .Values.kafka.sasl.type }}
+    username: ${secrets:{{ .Release.Namespace }}/{{ .Values.kafka.sasl.secretName }}:USERNAME}
+    passwordSecret:
+      secretName: {{ .Values.kafka.sasl.secretName }}
+      password: PASSWORD
+  {{ end }}
+  config:
+    group.id: {{ .Values.kafkaConnect.name }}-connect
+    config.providers: secrets,configmaps,env
+    config.providers.configmaps.class: io.strimzi.kafka.KubernetesConfigMapConfigProvider
+    config.providers.secrets.class: io.strimzi.kafka.KubernetesSecretConfigProvider
+    config.providers.env.class: org.apache.kafka.common.config.provider.EnvVarConfigProvider
+    config.storage.topic: {{ .Values.kafkaConnect.name }}-connect-configs
+    offset.storage.topic: {{ .Values.kafkaConnect.name }}-connect-offsets
+    status.storage.topic: {{ .Values.kafkaConnect.name }}-connect-status
+    {{- with .Values.kafkaConnect.config }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  template:
+    serviceAccount:
+      metadata:
+        annotations:
+          prometheus.io/port: "9094"
+          prometheus.io/scrape: "true"
+          prometheus.io/scrape_interval: 30s
+    connectContainer:
+      env:
+        - name: USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.kafka.sasl.secretName }}
+              key: USERNAME
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.kafka.sasl.secretName }}
+              key: PASSWORD
+        - name: SASL_JAAS_CONFIG
+          value: org.apache.kafka.common.security.scram.ScramLoginModule required username="$(USERNAME)" password="$(PASSWORD)";

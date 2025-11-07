@@ -1,0 +1,65 @@
+{{ $clusterName := .Values.kafkaConnect.name }}
+{{ $kafka := .Values.kafka }}
+{{ $namespace := .Release.Namespace }}
+{{ $baseConfig := .Values.kafkaConnectors.baseConfig }}
+{{ $useAvroConverter := .Values.kafkaConnectors.useAvroConverter | default false }}
+{{ range .Values.kafkaConnectors.connectors }}
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name:  {{ .name }}
+  labels:
+    strimzi.io/cluster: {{ $clusterName }}
+spec:
+  class: {{ .class }}
+  tasksMax: 1
+  config:
+    {{ if $kafka.sasl.enabled }}
+    schema.history.internal.consumer.sasl.jaas.config: ${env:SASL_JAAS_CONFIG}
+    schema.history.internal.consumer.sasl.mechanism: {{ $kafka.sasl.type | upper }}
+    schema.history.internal.producer.sasl.jaas.config: ${env:SASL_JAAS_CONFIG}
+    schema.history.internal.producer.sasl.mechanism: {{ $kafka.sasl.type | upper }}
+    signal.consumer.sasl.jaas.config: ${env:SASL_JAAS_CONFIG}
+    signal.consumer.sasl.mechanism: {{ $kafka.sasl.type | upper }}
+    key.converter.basic.auth.credentials.source: USER_INFO
+    key.converter.basic.auth.user.info: ${env:USERNAME}:${env:PASSWORD}
+    value.converter.basic.auth.credentials.source: USER_INFO
+    value.converter.basic.auth.user.info: ${env:USERNAME}:${env:PASSWORD}
+    {{ end }}
+
+    {{ if $kafka.tls.enabled }}
+    schema.history.internal.consumer.security.protocol: SASL_SSL
+    schema.history.internal.consumer.ssl.truststore.certificates: ${secrets:{{ $namespace }}/{{ $kafka.tls.secretName }}:ca.crt}
+    schema.history.internal.consumer.ssl.truststore.type: PEM
+    schema.history.internal.producer.security.protocol: SASL_SSL
+    schema.history.internal.producer.ssl.truststore.certificates: ${secrets:{{ $namespace }}/{{ $kafka.tls.secretName }}:ca.crt}
+    schema.history.internal.producer.ssl.truststore.type: PEM
+    signal.consumer.security.protocol: SASL_SSL
+    signal.consumer.ssl.truststore.certificates: ${secrets:{{ $namespace }}/{{ $kafka.tls.secretName }}:ca.crt}
+    signal.consumer.ssl.truststore.type: PEM
+    key.converter.schema.registry.ssl.truststore.certificates: ${secrets:{{ $namespace }}/{{ $kafka.tls.secretName }}:ca.crt}
+    key.converter.schema.registry.ssl.truststore.type: PEM
+    value.converter.schema.registry.ssl.truststore.certificates: ${secrets:{{ $namespace }}/{{ $kafka.tls.secretName }}:ca.crt}
+    value.converter.schema.registry.ssl.truststore.type: PEM
+    {{ end }}
+
+    {{- if $useAvroConverter }}
+    key.converter: io.confluent.connect.avro.AvroConverter
+    key.converter.enhanced.avro.schema.support: "true"
+    key.converter.schema.registry.url: {{ $kafka.schemaRegistry.url }}
+    value.converter: io.confluent.connect.avro.AvroConverter
+    value.converter.enhanced.avro.schema.support: "true"
+    value.converter.ignore.default.for.nullables: "true"
+    value.converter.schema.registry.url: {{ $kafka.schemaRegistry.url }}
+    {{ end }}
+
+    schema.history.internal.kafka.bootstrap.servers: {{ join "," $kafka.brokers }}
+    signal.kafka.bootstrap.servers: {{ join "," $kafka.brokers }}
+    {{- with .config }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- with $baseConfig }}
+    {{- toYaml $baseConfig | nindent 4 }}
+    {{- end }}
+{{ end }}

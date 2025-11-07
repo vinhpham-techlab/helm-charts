@@ -1,0 +1,21 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-access-from-redpanda-console
+spec:
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          strimzi.io/kind: KafkaConnect
+    - namespaceSelector: {}
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: redpanda-console
+          app.kubernetes.io/name: console
+    ports:
+      - protocol: TCP
+        port: 8083

@@ -1,0 +1,36 @@
+kafka:
+  brokers:
+    - redpanda-0.redpanda.redpanda.svc.cluster.local:9093
+    - redpanda-1.redpanda.redpanda.svc.cluster.local:9093
+    - redpanda-2.redpanda.redpanda.svc.cluster.local:9093
+  sasl:
+    enabled: false
+    type: scram-sha-512
+    # Secret includes these keys:
+    # - USERNAME
+    # - PASSWORD
+    secretName: redpanda-user
+
+  tls:
+    enabled: false
+    secretName: redpanda-default-cert
+    caKey: ca.crt
+  schemaRegistry:
+    url: https://redpanda-0.redpanda.redpanda.svc.cluster.local:8081
+    caKey: ca.crt
+
+kafkaConnect:
+  name: pandashop
+  # Supports both MySQL and PostgreSQL
+  image: strimzi-connect-debezium:20251107-1
+  replicas: 1
+  config:
+    config.storage.replication.factor: -1
+    offset.storage.replication.factor: -1
+    status.storage.replication.factor: -1
+
+kafkaConnectors:
+  baseConfig:
+    signal.enabled.channels: kafka
+    schema.history.internal.store.only.captured.tables.ddl: "true"
+  connectors: []
