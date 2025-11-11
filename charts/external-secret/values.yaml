@@ -1,0 +1,8 @@
+store:
+  name: vault-backend
+  server: https://vault.vinlab.org
+  auth:
+    secretName: vault-token
+secrets:
+  - name: secret-name
+    path: part/to/secret
