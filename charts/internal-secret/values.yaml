@@ -1,0 +1,8 @@
+vaultAuth:
+  name: internal-vault-auth
+
+auth:
+  mount: kubernetes
+  role: vault-role
+
+secrets: []
