@@ -11,6 +11,16 @@ entries:
     urls:
     - https://github.com/vinhpham-techlab/helm-charts/releases/download/external-secret-0.1.0/external-secret-0.1.0.tgz
     version: 0.1.0
+  internal-secret:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-11-11T08:28:22.473516519Z"
+    description: Sync secret from internal Vault
+    digest: 07af34e1ad6fefffead4fce7aa870b3da6d379f687e490f5a338677820c661af
+    name: internal-secret
+    urls:
+    - https://github.com/vinhpham-techlab/helm-charts/releases/download/internal-secret-0.1.0/internal-secret-0.1.0.tgz
+    version: 0.1.0
   kafka-connect:
   - apiVersion: v2
     appVersion: 1.16.0
@@ -41,4 +51,4 @@ entries:
     urls:
     - https://github.com/vinhpham-techlab/helm-charts/releases/download/vault-static-secret-0.1.0/vault-static-secret-0.1.0.tgz
     version: 0.1.0
-generated: "2025-11-11T06:28:49.767235163Z"
+generated: "2025-11-11T08:28:22.47352801Z"
