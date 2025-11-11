@@ -1,5 +1,16 @@
 apiVersion: v1
 entries:
+  external-secret:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-11-11T06:28:49.767207432Z"
+    description: A Helm chart for Kubernetes
+    digest: a8bea6689fa016e03ef0d45ed21be7b70fcdb09795df595454332a7b21a1d136
+    name: external-secret
+    type: application
+    urls:
+    - https://github.com/vinhpham-techlab/helm-charts/releases/download/external-secret-0.1.0/external-secret-0.1.0.tgz
+    version: 0.1.0
   kafka-connect:
   - apiVersion: v2
     appVersion: 1.16.0
@@ -30,4 +41,4 @@ entries:
     urls:
     - https://github.com/vinhpham-techlab/helm-charts/releases/download/vault-static-secret-0.1.0/vault-static-secret-0.1.0.tgz
     version: 0.1.0
-generated: "2025-11-07T09:22:48.947139279Z"
+generated: "2025-11-11T06:28:49.767235163Z"
