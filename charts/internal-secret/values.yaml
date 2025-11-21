@@ -1,8 +1,13 @@
-vaultAuth:
-  name: internal-vault-auth
-
 auth:
-  mount: kubernetes
-  role: vault-role
+  mount: ""
+  role: ""
+  audiences:
+    - vault
+
+serviceAccount:
+  create: false
+  name: ""
+  labels: {}
+  annotations: {}
 
 secrets: []

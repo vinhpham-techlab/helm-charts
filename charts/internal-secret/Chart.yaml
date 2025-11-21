@@ -1,5 +1,5 @@
 apiVersion: v2
 name: internal-secret
-version: 0.1.0
+version: 0.1.1
 appVersion: "1.0.0"
-description: Sync secret from internal Vault
+description: Sync secret from internal Vault in Kubernetes
