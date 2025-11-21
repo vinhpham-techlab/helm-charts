@@ -5,7 +5,7 @@ auth:
     - vault
 
 serviceAccount:
-  create: false
+  create: true
   name: ""
   labels: {}
   annotations: {}
