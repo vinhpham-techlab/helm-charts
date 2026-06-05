@@ -51,6 +51,17 @@ entries:
     urls:
     - https://github.com/vinhpham-techlab/helm-charts/releases/download/kafka-connect-0.1.0/kafka-connect-0.1.0.tgz
     version: 0.1.0
+  secret-replicator:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2026-06-05T14:20:19.133965493Z"
+    description: Replicate Kubernetes secrets across namespaces with External Secrets
+      Operator
+    digest: 445c97e97124c91fde6c893c7838335dc395d4c1a2739d339f09751bd08bb9f0
+    name: secret-replicator
+    urls:
+    - https://github.com/vinhdata/helm-charts/releases/download/secret-replicator-0.1.0/secret-replicator-0.1.0.tgz
+    version: 0.1.0
   vault-static-secret:
   - apiVersion: v2
     appVersion: 1.16.0
@@ -70,4 +81,4 @@ entries:
     urls:
     - https://github.com/vinhpham-techlab/helm-charts/releases/download/vault-static-secret-0.1.0/vault-static-secret-0.1.0.tgz
     version: 0.1.0
-generated: "2026-06-05T07:32:07.362079101Z"
+generated: "2026-06-05T14:20:19.133979785Z"
