@@ -33,6 +33,16 @@ entries:
   kafka-connect:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2026-06-05T07:32:07.3620622Z"
+    description: A Helm chart for Kubernetes
+    digest: 4af9f44077e7bca80c26d6195b53871c19221814d0b1fabe236d3096da4297db
+    name: kafka-connect
+    type: application
+    urls:
+    - https://github.com/vinhdata/helm-charts/releases/download/kafka-connect-1.0.0/kafka-connect-1.0.0.tgz
+    version: 1.0.0
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-11-07T09:22:48.811379075Z"
     description: A Helm chart for Kubernetes
     digest: eaed2d3c0ea16e21274f8da1a4c834005fab2f6c5d0b3ab4ae3b03786f81edcc
@@ -60,4 +70,4 @@ entries:
     urls:
     - https://github.com/vinhpham-techlab/helm-charts/releases/download/vault-static-secret-0.1.0/vault-static-secret-0.1.0.tgz
     version: 0.1.0
-generated: "2025-11-21T08:11:16.988182635Z"
+generated: "2026-06-05T07:32:07.362079101Z"
