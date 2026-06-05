@@ -1,0 +1,33 @@
+serviceAccount:
+  create: true
+  name: ""
+
+# ClusterSecretStore name. Defaults to "<release-namespace>-k8s".
+store:
+  name: ""
+
+# Namespace that owns the source secrets.
+source:
+  namespace: ""
+
+server:
+  caProvider:
+    type: ConfigMap
+    name: kube-root-ca.crt
+    key: ca.crt
+    namespace: ""
+
+# Example:
+# replications:
+#   - name: redpanda-external-cert
+#     refreshTime: 1m
+#     refreshInterval: 1m
+#     namespaceSelectors:
+#       - matchLabels:
+#           datalab.vinhdata.io/redpanda-external-cert: "true"
+#     target:
+#       name: redpanda-external-cert
+#       type: kubernetes.io/tls
+#     source:
+#       key: redpanda-external-cert
+replications: []

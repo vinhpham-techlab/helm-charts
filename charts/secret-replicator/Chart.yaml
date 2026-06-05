@@ -1,0 +1,5 @@
+apiVersion: v2
+name: secret-replicator
+version: 0.1.0
+appVersion: "1.0.0"
+description: Replicate Kubernetes secrets across namespaces with External Secrets Operator

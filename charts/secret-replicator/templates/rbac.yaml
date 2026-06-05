@@ -1,0 +1,40 @@
+{{- if .Values.serviceAccount.create }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "secret-replicator.fullname" . }}-reader
+  namespace: {{ include "secret-replicator.sourceNamespace" . }}
+  labels:
+    {{- include "secret-replicator.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - authorization.k8s.io
+    resources:
+      - selfsubjectrulesreviews
+    verbs:
+      - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "secret-replicator.fullname" . }}-reader
+  namespace: {{ include "secret-replicator.sourceNamespace" . }}
+  labels:
+    {{- include "secret-replicator.labels" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "secret-replicator.serviceAccountName" . }}
+    namespace: {{ include "secret-replicator.sourceNamespace" . }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "secret-replicator.fullname" . }}-reader
+{{- end }}
