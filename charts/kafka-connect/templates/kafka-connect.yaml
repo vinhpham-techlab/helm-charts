@@ -1,15 +1,37 @@
 ---
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaConnect
 metadata:
   name: {{ .Values.kafkaConnect.name }}
   annotations:
     strimzi.io/use-connector-resources: "true"
 spec:
+  {{- if .Values.kafkaConnect.image }}
   image: {{ .Values.kafkaConnect.image }}
+  {{- else }}
+  version: {{ .Values.kafkaConnect.version }}
+  {{- end }}
   replicas: {{ .Values.kafkaConnect.replicas }}
   bootstrapServers: {{ join "," .Values.kafka.brokers }}
-  
+  groupId: {{ .Values.kafkaConnect.name }}-connect
+  configStorageTopic: {{ .Values.kafkaConnect.name }}-connect-configs
+  offsetStorageTopic: {{ .Values.kafkaConnect.name }}-connect-offsets
+  statusStorageTopic: {{ .Values.kafkaConnect.name }}-connect-status
+
+  {{- if and .Values.kafkaConnect.build.enabled (not .Values.kafkaConnect.image) }}
+  build:
+    output:
+      type: {{ .Values.kafkaConnect.build.output.type }}
+      image: {{ .Values.kafkaConnect.build.output.image }}
+      {{- with .Values.kafkaConnect.build.output.pushSecret }}
+      pushSecret: {{ . }}
+      {{- end }}
+    {{- with .Values.kafkaConnect.build.plugins }}
+    plugins:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+  {{- end }}
+
   {{- if .Values.kafka.tls.enabled }}
   tls:
     trustedCertificates:
@@ -26,14 +48,10 @@ spec:
       password: PASSWORD
   {{ end }}
   config:
-    group.id: {{ .Values.kafkaConnect.name }}-connect
     config.providers: secrets,configmaps,env
     config.providers.configmaps.class: io.strimzi.kafka.KubernetesConfigMapConfigProvider
     config.providers.secrets.class: io.strimzi.kafka.KubernetesSecretConfigProvider
     config.providers.env.class: org.apache.kafka.common.config.provider.EnvVarConfigProvider
-    config.storage.topic: {{ .Values.kafkaConnect.name }}-connect-configs
-    offset.storage.topic: {{ .Values.kafkaConnect.name }}-connect-offsets
-    status.storage.topic: {{ .Values.kafkaConnect.name }}-connect-status
     {{- with .Values.kafkaConnect.config }}
     {{- toYaml . | nindent 4 }}
     {{- end }}

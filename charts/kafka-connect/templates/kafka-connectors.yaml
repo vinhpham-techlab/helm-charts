@@ -5,7 +5,7 @@
 {{ $useAvroConverter := .Values.kafkaConnectors.useAvroConverter | default false }}
 {{ range .Values.kafkaConnectors.connectors }}
 ---
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaConnector
 metadata:
   name:  {{ .name }}

@@ -1,21 +1,25 @@
+{{- if .Values.networkPolicy.enabled }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-access-from-redpanda-console
+  name: allow-console-to-connect-api
 spec:
+  podSelector:
+    matchLabels:
+      strimzi.io/kind: KafkaConnect
+      strimzi.io/cluster: {{ .Values.kafkaConnect.name }}
   policyTypes:
   - Ingress
   ingress:
   - from:
-    - podSelector:
+    - namespaceSelector:
         matchLabels:
-          strimzi.io/kind: KafkaConnect
-    - namespaceSelector: {}
+          kubernetes.io/metadata.name: {{ .Values.networkPolicy.consoleNamespace }}
       podSelector:
         matchLabels:
-          app.kubernetes.io/instance: redpanda-console
-          app.kubernetes.io/name: console
+          {{- toYaml .Values.networkPolicy.consolePodLabels | nindent 10 }}
     ports:
       - protocol: TCP
         port: 8083
+{{- end }}

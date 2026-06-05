@@ -21,9 +21,21 @@ kafka:
 
 kafkaConnect:
   name: pandashop
-  # Supports both MySQL and PostgreSQL
-  image: strimzi-connect-debezium:20251107-1
+  # Strimzi default Kafka Connect image (quay.io/strimzi/kafka:1.0.0-kafka-<version>)
+  version: "4.2.0"
+  # Optional: skip build and use a pre-built image instead
+  image: ""
   replicas: 1
+  build:
+    enabled: true
+    output:
+      type: docker
+      # Image Strimzi pushes after building plugins on top of the default Connect image
+      image: ""
+      pushSecret: ""
+    # Strimzi build.plugins — define per deployment. See:
+    # https://strimzi.io/docs/operators/latest/configuring.html#type-Build-reference
+    plugins: []
   config:
     config.storage.replication.factor: -1
     offset.storage.replication.factor: -1
@@ -34,3 +46,11 @@ kafkaConnectors:
     signal.enabled.channels: kafka
     schema.history.internal.store.only.captured.tables.ddl: "true"
   connectors: []
+
+networkPolicy:
+  enabled: true
+  # Namespace where Redpanda Console runs (source of ingress to Connect REST API)
+  consoleNamespace: redpanda
+  consolePodLabels:
+    app.kubernetes.io/name: console
+    app.kubernetes.io/instance: console
