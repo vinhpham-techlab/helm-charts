@@ -46,7 +46,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{- define "secret-replicator.storeName" -}}
-{{- default (printf "%s-k8s" (include "secret-replicator.sourceNamespace" .)) .Values.store.name }}
+{{- default (printf "%s-store" (include "secret-replicator.sourceNamespace" .)) .Values.store.name }}
 {{- end }}
 
 {{- define "secret-replicator.caProviderNamespace" -}}

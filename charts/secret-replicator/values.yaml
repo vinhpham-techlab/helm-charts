@@ -2,7 +2,7 @@ serviceAccount:
   create: true
   name: ""
 
-# ClusterSecretStore name. Defaults to "<release-namespace>-k8s".
+# ClusterSecretStore name. Defaults to "<release-namespace>-store".
 store:
   name: ""
 
