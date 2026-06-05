@@ -9,6 +9,7 @@ apiVersion: kafka.strimzi.io/v1
 kind: KafkaConnector
 metadata:
   name:  {{ .name }}
+  namespace: {{ $namespace }}
   labels:
     strimzi.io/cluster: {{ $clusterName }}
 spec:
